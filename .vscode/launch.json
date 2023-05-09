@@ -9,6 +9,8 @@
             "server": "http://training",
             "serverInstance": "BC",
             "authentication": "UserPassword",
+            "startupObjectType": "Page",
+            "startupObjectId": 130451,
             "breakOnError": "All",
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
