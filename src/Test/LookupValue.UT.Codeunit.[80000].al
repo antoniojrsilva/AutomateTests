@@ -25,15 +25,20 @@ codeunit 80000 "LooupValue UT Customer"
         VerifyLookupValueOnCustomer(Customer."No.", lcl_LookupValue);
     end;
 
-    [Test]
-    procedure AssignNonExistingLookupValueToCustomer()
-    begin
-        //[SCENARIO #0002] Assign non-existing lookup value to Customer
-        //[GIVEN] Non-existing lookup value
-        //[GIVEN] Customer
-        //[WHEN] Set no-existing lookup value on Customer
-        //[THEN] Non existing lookup value error thrown
-    end;
+    // [Test]
+    // procedure AssignNonExistingLookupValueToCustomer()
+    // var
+    //     Customer: Record Customer;
+    //     lcl_LookupValue: Code[20];
+    // begin
+    //     //[SCENARIO #0002] Assign non-existing lookup value to Customer
+    //     //[GIVEN] Non-existing lookup value
+    //     lcl_LookupValue := 'WRONGCODE';
+    //     //[GIVEN] Customer
+
+    //     //[WHEN] Set no-existing lookup value on Customer
+    //     //[THEN] Non existing lookup value error thrown
+    // end;
 
     local procedure CreateaLookupValueCode(): Code[20]
     var
