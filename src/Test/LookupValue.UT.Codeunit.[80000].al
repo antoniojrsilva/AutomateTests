@@ -36,12 +36,13 @@ codeunit 80000 "LooupValue UT Customer"
         lcl_LookupValue := 'WRONGCODE';
         //[GIVEN] Customer
         //[WHEN] Set no-existing lookup value on Customer
-        SetLookupValueOnCustomer(Customer, lcl_LookupValue);
+        asserterror SetLookupValueOnCustomer(Customer, lcl_LookupValue);
         //[THEN] Non existing lookup value error thrown
         VerifyNonExistingLookupValueError(lcl_LookupValue);
     end;
 
     [Test]
+    [HandlerFunctions('HandleCustomerTemplList')]
     procedure AssignLookupValueToCustomerCard()
     var
         lbl_LookupValue: Code[20];
@@ -51,10 +52,12 @@ codeunit 80000 "LooupValue UT Customer"
         //[SCENARIO #004] Assign lookup value on Customer Card
         //[GIVEN] Lookup Value
         lbl_LookupValue := CreateaLookupValueCode();
+        Message('%1', lbl_LookupValue);
         //[GIVEN] Customer Card
         CreateCustomerCard(CustomCard);
         //[WHEN] Set lookup value on Customer Card
         lbl_CustomerNo := SetLookupValueOnCustomerCard(CustomCard, lbl_LookupValue);
+        Message(lbl_CustomerNo);
         //[THEN] Customer has lookup value field populated
         VerifyLookupValueOnCustomer(lbl_CustomerNo, lbl_LookupValue);
     end;
@@ -123,5 +126,10 @@ codeunit 80000 "LooupValue UT Customer"
         CustomCard.Close();
     end;
 
+    [ModalPageHandler]
+    procedure HandleCustomerTemplList(var CustomerTemplList: TestPage "Select Customer Templ. List")
+    begin
+        CustomerTemplList.OK.Invoke();
+    end;
 
 }
