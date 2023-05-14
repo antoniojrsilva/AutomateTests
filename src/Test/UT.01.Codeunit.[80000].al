@@ -57,7 +57,6 @@ codeunit 80000 "LooupValue UT Customer"
         CreateCustomerCard(CustomCard);
         //[WHEN] Set lookup value on Customer Card
         lbl_CustomerNo := SetLookupValueOnCustomerCard(CustomCard, lbl_LookupValue);
-        Message(lbl_CustomerNo);
         //[THEN] Customer has lookup value field populated
         VerifyLookupValueOnCustomer(lbl_CustomerNo, lbl_LookupValue);
     end;
