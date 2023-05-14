@@ -27,9 +27,12 @@ codeunit 80000 "LooupValue UT Customer"
 
     [Test]
     procedure AssignNonExistingLookupValueToCustomer()
+    var
+        lcl_LookupValue: Code[20];
     begin
         //[SCENARIO #0002] Assign non-existing lookup value to Customer
         //[GIVEN] Non-existing lookup value
+        lcl_LookupValue := 'LK-0001';
         //[GIVEN] Customer
         //[WHEN] Set no-existing lookup value on Customer
         //[THEN] Non existing lookup value error thrown
