@@ -6,7 +6,7 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            "server": "http://training",
+            "server": "http://automation",
             "serverInstance": "BC",
             "authentication": "UserPassword",
             "startupObjectType": "Page",
@@ -16,7 +16,8 @@
             "enableLongRunningSqlStatements": true,
             "enableSqlInformationDebugger": true,
             "tenant": "default",
-            "usePublicURLFromServer": true
+            "usePublicURLFromServer": true,
+            "schemaUpdateMode": "ForceSync"
         }
     ]
 }
