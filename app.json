@@ -1,8 +1,8 @@
 {
   "id": "7c4e37fe-97aa-456d-8c68-8923c9e6e109",
-  "name": "AutomateTests",
+  "name": "UT Generator",
   "publisher": "Default publisher",
-  "version": "1.0.0.1",
+  "version": "1.0.0.2",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -25,7 +25,7 @@
     }
   ],
   "screenshots": [],
-  "platform": "1.0.0.0",
+  "platform": "1.0.0.2",
   "application": "22.0.0.0",
   "idRanges": [
     {
@@ -35,6 +35,10 @@
     {
       "from": 80000,
       "to": 80149
+    },
+    {
+      "from": 90000,
+      "to": 90199
     }
   ],
   "resourceExposurePolicy": {
