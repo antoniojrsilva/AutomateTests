@@ -1,4 +1,4 @@
-page 50001 "All Objects for me"
+page 50010 "All Objects for me"
 {
     ApplicationArea = All;
     Caption = 'All Objects';
