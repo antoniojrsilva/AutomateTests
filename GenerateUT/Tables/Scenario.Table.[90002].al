@@ -27,6 +27,10 @@ table 90002 TestScenario
             Caption = 'Active';
             InitValue = true;
         }
+        field(60; PositiveNegative; Boolean)
+        {
+            Caption = 'Positive//Negative Test';
+        }
     }
     keys
     {

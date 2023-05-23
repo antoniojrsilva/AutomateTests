@@ -31,10 +31,6 @@ page 90003 FuctionsPage
                 {
 
                 }
-                field(PositiveNegative; Rec.PositiveNegative)
-                {
-
-                }
             }
         }
     }

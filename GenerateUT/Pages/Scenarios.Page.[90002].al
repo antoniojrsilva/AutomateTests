@@ -22,9 +22,11 @@ page 90002 ScenariosPage
                 }
                 field(ScenarioName; Rec.ScenarioName)
                 {
-
                 }
                 field(Active; Rec.Active)
+                {
+                }
+                field(PositiveNegative; Rec.PositiveNegative)
                 {
 
                 }
@@ -46,6 +48,15 @@ page 90002 ScenariosPage
                     Ellipsis = true;
                     Image = Action;
                     RunObject = Page FuctionsPage;
+                    RunPageLink = FeatureCode = field(FeatureCode), ScenarioCode = field(ScenarioCode);
+                    ApplicationArea = All;
+                }
+                action(Objects)
+                {
+                    Caption = 'Objects';
+                    Ellipsis = true;
+                    Image = AddWatch;
+                    RunObject = Page ScenarioObjects;
                     RunPageLink = FeatureCode = field(FeatureCode), ScenarioCode = field(ScenarioCode);
                     ApplicationArea = All;
                 }

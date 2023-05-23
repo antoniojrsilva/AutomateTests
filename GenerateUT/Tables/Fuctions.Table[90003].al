@@ -34,10 +34,7 @@ table 90003 TestFunction
         {
             Caption = 'UI';
         }
-        field(80; PositiveNegative; Boolean)
-        {
-            Caption = 'Positive-Negative Test';
-        }
+
         //field(90)
     }
     keys
