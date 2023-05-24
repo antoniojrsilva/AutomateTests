@@ -16,20 +16,57 @@ page 90004 ScenarioObjects
                 {
                     trigger OnValidate()
                     begin
-                        if Format(ObjectType) in ['Table', 'Page'] then
-                            EnableLookup := true
-                        else
-                            EnableLookup := false;
+                        CreatePageBehaviour();
                     end;
 
                 }
                 field(ObjectID; Rec.ObjectID)
                 {
-                    Editable = Enablelookup;
+                    Editable = not EnableLenght;
+                    trigger OnValidate()
+                    begin
+                        CreatePageBehaviour();
+                    end;
+
                 }
+                field(ObjectUTName; ObjectUTName)
+                {
+                    Caption = 'BC Object Name';
+                    Editable = false;
+                }
+                field(ObjectName; Rec.ObjectName)
+                {
+                }
+                field(FieldLenght; Rec.FieldLenght)
+                {
+                    Editable = EnableLenght;
+                    ShowMandatory = EnableLenght;
+                }
+
             }
         }
     }
+    trigger OnAfterGetRecord()
+    begin
+        CreatePageBehaviour();
+    end;
+
+    local procedure CreatePageBehaviour()
     var
-        Enablelookup: Boolean;
+        ObjectsTable: Record AllObjWithCaption;
+    begin
+        EnableLenght := true;
+        EnableLenght := not (Format(Rec.ObjectType) in ['Table', 'Page', 'Boolean']);
+        Clear(ObjectUTName);
+        if (Format(Rec.ObjectType) in ['Table', 'Page']) then
+            if ((Format(Rec.ObjectType) <> '') and (Rec.ObjectID <> 0)) then
+                if ObjectsTable.Get(Rec.ObjectType, Rec.ObjectID) then begin
+                    ObjectUTName := ObjectsTable."Object Caption";
+                    Clear(Rec.FieldLenght);
+                end;
+    end;
+
+    var
+        EnableLenght: Boolean;
+        ObjectUTName: Text[50];
 }

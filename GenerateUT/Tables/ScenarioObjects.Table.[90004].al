@@ -20,17 +20,27 @@ table 90004 ScenariosObjects
         {
             AutoIncrement = true;
         }
-        field(40; ObjectType; Enum ObjectType)
+        field(40; ObjectName; Text[30])
         {
+            Caption = 'Object Name';
+            trigger OnValidate()
+            begin
+                ObjectName := DelChr(ObjectName, ' ');
+            end;
 
         }
-        field(50; ObjectID; Integer)
+        field(50; ObjectType; Enum ObjectType)
         {
+            Caption = 'Object Type';
+        }
+        field(60; ObjectID; Integer)
+        {
+            Caption = 'Object ID';
             TableRelation = AllObjWithCaption."Object ID" where("Object Type" = field(ObjectType));
         }
-        field(60; FieldLenght; integer)
+        field(70; FieldLenght; integer)
         {
-
+            Caption = 'Field Lenght';
         }
     }
     keys
