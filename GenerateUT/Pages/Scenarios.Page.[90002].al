@@ -44,7 +44,7 @@ page 90002 ScenariosPage
 
                 action(Functions)
                 {
-                    Caption = 'Functions';
+                    Caption = 'Procedures';
                     Ellipsis = true;
                     Image = Action;
                     RunObject = Page FuctionsPage;

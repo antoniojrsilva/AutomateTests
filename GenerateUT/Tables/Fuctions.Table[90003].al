@@ -11,10 +11,11 @@ table 90003 TestFunction
             Caption = 'Scenario Code';
             TableRelation = TestScenario.ScenarioCode where(FeatureCode = field(FeatureCode));
         }
-        field(30; FunctionNo; Integer)
+        field(30; ProcedureUT; Integer)
         {
-            Caption = 'Function Number';
-            NotBlank = true;
+            Caption = 'UT Procedure Number';
+            AutoIncrement = true;
+            MinValue = 1;
         }
         field(40; Description; text[100])
         {
@@ -34,12 +35,10 @@ table 90003 TestFunction
         {
             Caption = 'UI';
         }
-
-        //field(90)
     }
     keys
     {
-        key(PK; FeatureCode, ScenarioCode, FunctionNo)
+        key(PK; FeatureCode, ScenarioCode, ProcedureUT)
         {
             Clustered = true;
         }

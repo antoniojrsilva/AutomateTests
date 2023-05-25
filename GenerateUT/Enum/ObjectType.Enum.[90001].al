@@ -1,4 +1,4 @@
-enum 90001 ObjectType
+enum 90001 ObjectTypeEnum
 {
     Extensible = true;
     value(1; Table)

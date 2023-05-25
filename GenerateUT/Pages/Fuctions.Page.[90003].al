@@ -11,10 +11,6 @@ page 90003 FuctionsPage
         {
             repeater(General)
             {
-                field(FunctionNo; Rec.FunctionNo)
-                {
-                    ToolTip = 'Specifies the value of the Function Number field.';
-                }
                 field(ProcedureType; Rec.ProcedureType)
                 {
                     ToolTip = 'Specifies the value of the Test Type field.';
@@ -34,5 +30,18 @@ page 90003 FuctionsPage
             }
         }
     }
-
+    actions
+    {
+        area(Processing)
+        {
+            action(Functions)
+            {
+                Caption = 'Parameters';
+                ApplicationArea = All;
+                Image = Action;
+                RunObject = Page ParametersObjectPage;
+                RunPageLink = FeatureCode = field(FeatureCode), ScenarioCode = field(ScenarioCode), ProcedureNo = field(ProcedureUT);
+            }
+        }
+    }
 }

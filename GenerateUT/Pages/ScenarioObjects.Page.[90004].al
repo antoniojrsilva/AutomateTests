@@ -46,6 +46,7 @@ page 90004 ScenarioObjects
             }
         }
     }
+
     trigger OnAfterGetRecord()
     begin
         CreatePageBehaviour();

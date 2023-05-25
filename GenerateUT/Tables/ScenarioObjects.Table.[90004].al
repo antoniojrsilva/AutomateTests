@@ -2,6 +2,7 @@ table 90004 ScenariosObjects
 {
     Caption = 'Objects for Scenario';
     DataClassification = ToBeClassified;
+    LookupPageId = ScenarioObjects;
 
     fields
     {
@@ -16,20 +17,15 @@ table 90004 ScenariosObjects
             NotBlank = true;
             TableRelation = TestScenario.ScenarioCode;
         }
-        field(30; RowNumber; integer)
+        field(30; Parameters; integer)
         {
             AutoIncrement = true;
         }
         field(40; ObjectName; Text[30])
         {
             Caption = 'Object Name';
-            trigger OnValidate()
-            begin
-                ObjectName := DelChr(ObjectName, ' ');
-            end;
-
         }
-        field(50; ObjectType; Enum ObjectType)
+        field(50; ObjectType; Enum ObjectTypeEnum)
         {
             Caption = 'Object Type';
         }
@@ -45,7 +41,7 @@ table 90004 ScenariosObjects
     }
     keys
     {
-        key(PK; FeatureCode, ScenarioCode, RowNumber)
+        key(PK; FeatureCode, ScenarioCode, Parameters)
         {
             Clustered = true;
         }
