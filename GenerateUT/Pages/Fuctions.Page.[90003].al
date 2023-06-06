@@ -39,8 +39,17 @@ page 90003 FuctionsPage
                 Caption = 'Parameters';
                 ApplicationArea = All;
                 Image = Action;
-                RunObject = Page ParametersObjectPage;
-                RunPageLink = FeatureCode = field(FeatureCode), ScenarioCode = field(ScenarioCode), ProcedureNo = field(ProcedureUT);
+                //RunObject = Page ParametersObjectPage;
+                //RunPageLink = FeatureCode = field(FeatureCode), ScenarioCode = field(ScenarioCode), ProcedureNo = field(ProcedureUT);
+                trigger OnAction()
+                var
+                    ParametersObject: Record ParameterssObjects;
+                begin
+                    ParametersObject.SetRange(FeatureCode, Rec.FeatureCode);
+                    ParametersObject.SetRange(ScenarioCode, Rec.ScenarioCode);
+                    ParametersObject.SetRange(ProcedureNo, Rec.ProcedureUT);
+                    Page.RunModal(Page::ParametersObjectPage, ParametersObject)
+                end;
             }
         }
     }
