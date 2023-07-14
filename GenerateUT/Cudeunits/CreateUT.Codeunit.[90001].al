@@ -62,6 +62,7 @@ codeunit 90001 CreateUT
         ScenarioObjects: Record ScenariosObjects;
         ErrorMsg: Label 'The Scenario %1 doesn''t have active Functions';
         TxtProcedures: TextBuilder;
+        ObjectTypeEnum: Enum ObjectTypeEnum;
     begin
         tab := 9;
         TxtBuilder.AppendLine();
@@ -69,6 +70,7 @@ codeunit 90001 CreateUT
         TxtBuilder.AppendLine(Format(tab) + 'procedure ' + DelChr(Scenario.ScenarioName, '=', ' ') + '()');
         ScenarioObjects.SetRange(FeatureCode, Scenario.FeatureCode);
         ScenarioObjects.SetRange(ScenarioCode, Scenario.ScenarioCode);
+        ScenarioObjects.SetFilter(ObjectType, '<>%1&<>%2', ObjectTypeEnum::Codeunit, ObjectTypeEnum::Label);
         if not ScenarioObjects.IsEmpty then
             if ScenarioObjects.FindSet(false) then begin
                 TxtBuilder.AppendLine(Format(tab) + 'var');
@@ -112,71 +114,86 @@ codeunit 90001 CreateUT
             ObjectTypeEnum::Page:
                 begin
                     AllObjects.Get(ScenarioObjects.ObjectType, ScenarioObjects.ObjectID);
-                    TxtBuilder.AppendLine('Page "' + AllObjects."Object Name" + '";');
+                    TxtBuilder.AppendLine('TestPage "' + AllObjects."Object Name" + '";');
                 end;
         end;
     end;
 
     local procedure GenerateUTProcedures(Functions: Record TestFunction; var TxtBuilder: TextBuilder; var TxtProcedures: TextBuilder)
-    var
-        ParamObjects: Record ParameterssObjects;
-        FunctionsNo: Integer;
     begin
         tab := 9;
         TxtBuilder.Append(Format(tab) + Format(tab));
         TxtBuilder.AppendLine('//[' + Format(Functions.ProcedureType) + ']' + Functions.Description);
         TxtBuilder.Append(Format(tab) + Format(tab));
-        TxtBuilder.Append(DelChr(Functions.ProcedureName, '=', ' ') + '(');
+        TxtBuilder.Append(Functions.ProcedureName + '(');
+        InsertParameterOnProceduresCall(Functions, TxtBuilder);
+        TxtBuilder.AppendLine(');');
+        GenerateUTFunctions(Functions, TxtProcedures);
+    end;
+
+    local procedure InsertParameterOnProceduresCall(Functions: Record TestFunction; var TxtBuilder: TextBuilder)
+    var
+        ParamObjects: Record ParameterssObjects;
+        ScenarioObjects: Record ScenariosObjects;
+        ObjectTypeEnum: Enum ObjectTypeEnum;
+        FunctionNo: Integer;
+    begin
+        tab := 9;
+        ParamObjects.CalcFields(ObjectType);
         ParamObjects.SetRange(FeatureCode, Functions.FeatureCode);
         ParamObjects.SetRange(ScenarioCode, Functions.ScenarioCode);
         ParamObjects.SetRange(ProcedureNo, Functions.ProcedureUT);
-        if ParamObjects.FindSet(false) then begin
-            FunctionsNo := ParamObjects.Count();
+        ParamObjects.SetFilter(ObjectType, '<>%1&<>%2', ObjectTypeEnum::Codeunit, ObjectTypeEnum::Label);
+        FunctionNo := ParamObjects.Count;
+        if ParamObjects.FindSet(false) then
             repeat
-                InsertParameterOnProceduresCall(ParamObjects, Functions, TxtBuilder, FunctionsNo);
-                FunctionsNo -= 1;
+                ScenarioObjects.Get(ParamObjects.FeatureCode, ParamObjects.ScenarioCode, ParamObjects.ParameterNo);
+                FunctionNo -= 1;
+                TxtBuilder.Append(ScenarioObjects.ObjectName);
+                if FunctionNo > 0 then
+                    TxtBuilder.Append(', ');
             until ParamObjects.Next() = 0;
-        end;
-        TxtBuilder.AppendLine(');');
-        GenerateUTFunctions(Functions, TxtProcedures);
     end;
 
     local procedure GenerateUTFunctions(Functions: Record TestFunction; var TxtProcedures: TextBuilder)
     var
         ParamObjects: Record ParameterssObjects;
-        FunctionsNo: Integer;
+        TxtLocalVar: TextBuilder;
+        FunctionNo: Integer;
     begin
         tab := 9;
         TxtProcedures.AppendLine();
-        TxtProcedures.Append(Format(tab) + 'local procedure ' + DelChr(Functions.ProcedureName, '=', ' ') + '(');
+        TxtProcedures.Append(Format(tab) + 'local procedure ' + Functions.ProcedureName + '(');
+        ParamObjects.CalcFields(ObjectType);
         ParamObjects.SetRange(FeatureCode, Functions.FeatureCode);
         ParamObjects.SetRange(ScenarioCode, Functions.ScenarioCode);
         ParamObjects.SetRange(ProcedureNo, Functions.ProcedureUT);
-        if ParamObjects.FindSet(false) then begin
-            FunctionsNo := ParamObjects.Count();
+        ParamObjects.SetFilter(ObjectType, '<>%1&<>%2', ObjectTypeEnum::Codeunit, ObjectTypeEnum::Label);
+        FunctionNo := ParamObjects.Count;
+        if ParamObjects.FindSet(false) then
             repeat
-                InsertParameterOnProceduresDefinition(ParamObjects, Functions, TxtProcedures, FunctionsNo);
-                FunctionsNo -= 1;
+                FunctionNo -= 1;
+                InsertParameterOnProceduresDefinition(ParamObjects, Functions, TxtProcedures, TxtLocalVar);
+                if FunctionNo > 0 then
+                    TxtProcedures.Append('; ')
             until ParamObjects.Next() = 0;
-        end;
         TxtProcedures.AppendLine(')');
+        ParamObjects.CalcFields(ObjectType);
+        ParamObjects.SetRange(FeatureCode, Functions.FeatureCode);
+        ParamObjects.SetRange(ScenarioCode, Functions.ScenarioCode);
+        ParamObjects.SetRange(ProcedureNo, Functions.ProcedureUT);
+        ParamObjects.SetFilter(ObjectType, '%1|%2', ObjectTypeEnum::Codeunit, ObjectTypeEnum::Label);
+        if ParamObjects.FindSet(false) then begin
+            InsertLocalVar(ParamObjects, ParamObjects.ErrorLabel, TxtLocalVar);
+            TxtProcedures.AppendLine(Format(tab) + 'var');
+            TxtProcedures.AppendLine(TxtLocalVar.ToText);
+        end;
         TxtProcedures.AppendLine(Format(tab) + 'begin');
         TxtProcedures.AppendLine(Format(tab) + 'end;');
     end;
 
-    local procedure InsertParameterOnProceduresCall(ParamObjects: Record ParameterssObjects; Functions: Record TestFunction; var TxtBuilder: TextBuilder; FunctionsNo: Integer)
-    var
-        ScenarioObjects: Record ScenariosObjects;
-    begin
-        tab := 9;
-        if ScenarioObjects.Get(ParamObjects.FeatureCode, ParamObjects.ScenarioCode, ParamObjects.ParameterNo) then begin
-            TxtBuilder.Append(ScenarioObjects.ObjectName);
-            if FunctionsNo > 1 then
-                TxtBuilder.Append(', ');
-        end;
-    end;
 
-    local procedure InsertParameterOnProceduresDefinition(ParamObjects: Record ParameterssObjects; Functions: Record TestFunction; var TxtProcedures: TextBuilder; FunctionsNo: Integer)
+    local procedure InsertParameterOnProceduresDefinition(ParamObjects: Record ParameterssObjects; Functions: Record TestFunction; var TxtProcedures: TextBuilder; var TxtLocalVar: TextBuilder)
     var
         ScenarioObjects: Record ScenariosObjects;
         AllObjects: Record AllObjWithCaption;
@@ -201,12 +218,33 @@ codeunit 90001 CreateUT
                 ObjectTypeEnum::Page:
                     begin
                         AllObjects.Get(ScenarioObjects.ObjectType, ScenarioObjects.ObjectID);
-                        TxtProcedures.Append('Page "' + AllObjects."Object Name" + '"');
+                        TxtProcedures.Append('TestPage "' + AllObjects."Object Name" + '"');
                     end;
             end;
-            if FunctionsNo > 1 then
-                TxtProcedures.Append('; ');
         end;
+
+    end;
+
+    local procedure InsertLocalVar(var ParamObjects: Record ParameterssObjects; ErrorLabel: Text[50]; var TxtLocalVar: TextBuilder)
+    var
+        AllObjects: Record AllObjWithCaption;
+        ScenarioObjects: Record ScenariosObjects;
+    begin
+        tab := 9;
+        repeat
+            TxtLocalVar.Append(Format(tab) + Format(tab));
+            ScenarioObjects.Get(ParamObjects.FeatureCode, ParamObjects.ScenarioCode, ParamObjects.ParameterNo);
+            TxtLocalVar.Append(ScenarioObjects.ObjectName + ': ');
+            case ScenarioObjects.ObjectType of
+                ObjectTypeEnum::Codeunit:
+                    begin
+                        AllObjects.Get(ScenarioObjects.ObjectType, ScenarioObjects.ObjectID);
+                        TxtLocalVar.AppendLine('Codeunit "' + AllObjects."Object Name" + '";');
+                    end;
+                ObjectTypeEnum::Label:
+                    TxtLocalVar.AppendLine('Label ''' + ErrorLabel + ''';');
+            end;
+        until ParamObjects.Next() = 0;
     end;
 
     var

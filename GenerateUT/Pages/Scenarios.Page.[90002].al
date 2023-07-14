@@ -19,6 +19,10 @@ page 90002 ScenariosPage
                 field(ScenarioDescription; Rec.ScenarioDescription)
                 {
                     ToolTip = 'Specifies the value of the Scenario Description field.';
+                    trigger OnValidate()
+                    begin
+                        Rec.ScenarioName := DelChr(Rec.ScenarioDescription, '=', ' ')
+                    end;
                 }
                 field(ScenarioName; Rec.ScenarioName)
                 {

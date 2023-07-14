@@ -35,15 +35,19 @@ page 90005 ParametersObjectPage
                 }
                 field(ObjectCaptionName; ObjectCaptionName)
                 {
-
+                    Caption = 'Object Caption Name';
                 }
                 field(ObjectName; ObjectName)
                 {
-
+                    Caption = 'For Code Object Name';
                 }
                 field(IsPointer; Rec.IsPointer)
                 {
                     ToolTip = 'Specifies the value of the IsPointer field.';
+                }
+                field(ErrorLabel; Rec.ErrorLabel)
+                {
+
                 }
             }
         }
@@ -68,7 +72,6 @@ page 90005 ParametersObjectPage
                     FieldParamObjects.SetRange(ProcedureNo, Rec.ProcedureNo);
                     FieldParamObjects.SetRange(ParameterNo, Rec.ParameterNo);
                     FieldParamObjects.SetRange(TableNo, GetTableValue());
-                    //   if FieldParamObjects.FindSet(false) then
                     Page.RunModal(Page::FieldParamObjects, FieldParamObjects);
                 end;
             }

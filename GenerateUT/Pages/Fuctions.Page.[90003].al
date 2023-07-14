@@ -17,7 +17,10 @@ page 90003 FuctionsPage
                 }
                 field(Description; Rec.Description)
                 {
-
+                    trigger OnValidate()
+                    begin
+                        Rec.ProcedureName := DelChr(Rec.Description, '=', ' ');
+                    end;
                 }
                 field(ProcedureName; Rec.ProcedureName)
                 {

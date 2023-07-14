@@ -26,9 +26,19 @@ table 90005 ParameterssObjects
             Caption = 'Parameter Number';
             TableRelation = ScenariosObjects.Parameters where(FeatureCode = field(FeatureCode), ScenarioCode = field(ScenarioCode));
         }
+        field(60; ErrorLabel; Text[50])
+        {
+            Caption = 'Label Value';
+        }
         field(70; IsPointer; Boolean)
         {
-            Caption = 'IsPointer';
+            Caption = 'Var';
+            InitValue = true;
+        }
+        field(80; ObjectType; Enum ObjectTypeEnum)
+        {
+            FieldClass = FlowField;
+            CalcFormula = lookup(ScenariosObjects.ObjectType where(FeatureCode = field(FeatureCode), ScenarioCode = field(ScenarioCode), Parameters = field(ParameterNo)));
         }
     }
     keys
